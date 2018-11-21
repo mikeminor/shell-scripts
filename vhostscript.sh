@@ -62,7 +62,7 @@ apachehandler()
 
 [[ $EUID -eq 0 ]] || helper "Attempted to run $0 without privileges. Exiting."
 
-while getopts "bcdern:e:u:?h" opt; do
+while getopts "bcdern:m:u:?h" opt; do
   case $opt in
     b) mydebug=true ;;
     c) myaction="create" ;;
@@ -90,7 +90,7 @@ echo "dddd"
 
 # Getopts offers tools to deal with errors within arguments passed, but we must still check that the proper arguments were passed.
 # Specifically we must check that the action to take (create or delete) and the domain name were passed, otherwise exit.
-if [[ -z $webdomain ]] || ( [[ $myaction != "create" ]] && [[ $myaction != "remove" ]] && [[ $myaction != "enable" ]] && [[ $myaction != "disable" ]] ); then
+if [[ -z $webdomain ]] || { [[ $myaction != "create" ]] && [[ $myaction != "remove" ]] && [[ $myaction != "enable" ]] && [[ $myaction != "disable" ]]; }; then
   helper
 fi
 
