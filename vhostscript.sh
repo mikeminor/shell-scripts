@@ -44,7 +44,7 @@ helper()
   if [[ -n "$1" ]] ; then
     echo "$1"
   else
-    echo "Usage: vhostscript.sh -c|-d|-e|-r (create or delete or enable or remove) -n domain.com [ -e user@email.com ] [ -u user (set file user owner) ]"
+    echo "Usage: vhostscript.sh -c|-d|-e|-r (create or delete or enable or remove) -n domain.com [ -m user@email.com ] [ -u user (set file user owner) ]"
   fi
   exit 2
 }
@@ -74,7 +74,7 @@ while getopts "bcdern:e:u:?h" opt; do
       webdomain="${OPTARG#www.*}"
       vhostconf="${sitesavailable}/${webdomain}.conf"
       webuserdir="${webroot}/${webdomain}" ;;
-    e) webemail="ServerAdmin $OPTARG" ;; 
+    m) webemail="ServerAdmin $OPTARG" ;; 
     u) webusername="$OPTARG" ;; 
     h|\?) helper ;;
     : ) helper ;;
@@ -110,7 +110,7 @@ fi
 
 if [[ "$myaction" == "enable" ]]; then
   [[ ! -L "${sitesenabled}/${webdomain}.conf" ]] || helper "Vhost already enabled in sites-enabled at ${sitesenabled}/${webdomain}.conf. Exiting."
-  [[ -f $vhostconf ]] || helper "Cannot enable ${webdomain}. $vhostfile does not exist."
+  [[ -f $vhostconf ]] || helper "Cannot enable ${webdomain}. $vhostconf does not exist."
   ln -s $vhostconf "${sitesenabled}/${webdomain}.conf"
   echo "Symlink created successfully. $webdomain enabled."
   apachehandler
@@ -149,7 +149,8 @@ fi
 
 #This is really just a first time run but realistically we're double checking every time we create a new vhost.
 #Check our httpd conf for IncludeOptional sites-enabled/*.conf. Add if it doesn't exist.
-if [[ -z $(cat $httpdconf | grep "IncludeOptional sites-enabled/\*.conf") ]]
+#if [[ -z $(cat $httpdconf | grep "IncludeOptional sites-enabled/\*.conf") ]]
+if [ $( ! grep -q "IncludeOptional sites-enabled/\*.conf" $httpdconf ) ]
 then
   echo "IncludeOptional sites-enabled/*.conf" >> $httpdconf
   echo "Added sites-enabled IncludeOptional to httpd.conf successfully"
