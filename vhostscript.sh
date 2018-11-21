@@ -182,8 +182,6 @@ fi
       AllowOverride All
       Require all granted
     </Directory>  
-    ErrorLog $webuserdir/error_log
-    CustomLog $webuserdir/access_log combined
 
 </VirtualHost>
 " > $vhostconf
