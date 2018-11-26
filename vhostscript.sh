@@ -82,8 +82,6 @@ while getopts "bcdern:m:u:?h" opt; do
 done
 shift $((OPTIND-1))
 
-echo "dddd"
-
 #Ensure the httpd.conf has been found properly. Possibly should run this check above the getopts?
 [[ -f $httpdconf ]] || helper "Could not find httpd.conf at $httpdconf. Exiting."
 [[ -z $webusername ]] && webusername=$apacheuser
